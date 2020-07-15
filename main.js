@@ -50,6 +50,8 @@ class server_structure {
             res.end();
         });
 
+        app.end();
+
         this.server._listen();
     }
 
@@ -60,5 +62,7 @@ const start = () =>{
     let main = new server_structure;
     main._render();
 }
+
+
 
 start();
