@@ -46,11 +46,10 @@ class server_structure {
         const app = this.server._start();
 
         app.get(`/`, (req, res)=>{
-            res.send(`Hello World!!`);
-            res.end();
+            res.render(`${__dirname}/public/index.html`, {msg: "Teste Engine"});
         });
 
-        app.end();
+    
 
         this.server._listen();
     }
@@ -62,7 +61,5 @@ const start = () =>{
     let main = new server_structure;
     main._render();
 }
-
-
 
 start();
