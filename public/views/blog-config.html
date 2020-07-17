@@ -1,15 +1,38 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html >
+<html ng-app>
 <head>
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>Page Title</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-
 </head>
 <body>
-    
-    
 
+    <form action="/setnewconfiguration" method="POST">
+
+        <div>
+            <h2>Menu da página</h2>
+
+            <label>Inserir nova página</label> <input id="menu-text" type="text" /><input id="add-menu" type="button" value="add">
+            
+            <div id="actual-pages" >
+
+                
+
+            </div>
+
+            <input name="menu" type="hidden" value="" id="send-menu" />
+
+            <input type="submit" value="Salvar" />
+
+            </div>
+
+        </form>
+
+        <div id="from-server" style="opacity: 0;"> <%= pages %> </div>
+
+        <script src="/scripts/js/stdlib"></script>
+        <script src="/scripts/js/blog-config"></script>
+        
 </body>
-</html>>
+</html>
