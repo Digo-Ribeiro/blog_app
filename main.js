@@ -59,10 +59,6 @@ class server_structure {
     _render(){
         const app = this.server._start();
 
-        app.get(`/`, (req, res)=>{
-            res.render(`${__dirname}/public/index.html`, {msg: "Teste Engine"});
-        });
-
         sql.connect((err)=>{
 
             if (err) throw err
@@ -71,12 +67,35 @@ class server_structure {
             renderFile(`scripts/js/blog-config`, `public/scripts/blog-config.js`, app);
             renderFile(`scripts/js/stdlib`, `public/scripts/stdlib.js`, app);
             renderFile(`scripts/js/edit-page`, `public/scripts/edit-page.js`, app);
+            renderFile(`scripts/js/index`, `public/scripts/index.js`, app);
 
             let main_pages = [];
+
+            let public_pages = [];
+
+            app.get(`/`, (req, res)=>{
+
+                sql.query(`DESCRIBE pages_content`, (err, result)=>{
+
+                    if (err) throw err;
+
+                    public_pages = [];
+    
+                    for(let index = 2; index < result.length; index++){
+                        public_pages.push(result[index].Field);
+                    };
+
+                    res.render(`${__dirname}/public/index.html`, {menu: public_pages});
+                    
+                    
+                });
+            });
 
             sql.query(`DESCRIBE pages_content`, (err, result)=>{
 
                 if (err) throw err;
+
+                main_pages = [];
 
                 for(let index = 2; index < result.length; index++){
                     main_pages.push(result[index].Field);
@@ -85,7 +104,13 @@ class server_structure {
                 for(let index of main_pages){
                     app.get(`/pages_${index}`, (req,res)=>{
                         sql.query(`SELECT ${index} FROM pages_content`, (err, result)=>{
-                            res.send(result[0][index]);
+                            let str = null;
+                            for(let i = 0; i < result.length; i++){
+                                if(result[i][index]!=''){
+                                    str = result[i][index];
+                                }
+                            }
+                            res.send(str);
                         });
                     });
                 }
@@ -104,12 +129,17 @@ class server_structure {
 
                         let getUndef = (result.length);
 
-                        if(getUndef=0){
-                            sql.query(`ALTER TABLE pages_content ADD ${page} VARCHAR (255)`);
-                            sql.query(`INSERT INTO pages_content (${page}) VALUES ("${content}")`);
-                        }else{
+                        print(getUndef)
+
+                        if(getUndef==1){
                             sql.query(`ALTER TABLE pages_content DROP ${page}`);
+                            sql.query(`ALTER TABLE pages_content ADD ${page} VARCHAR(255) CHARACTER SET utf8 DEFAULT ''`);
+
+                        }else{
                             sql.query(`ALTER TABLE pages_content ADD ${page} VARCHAR (255)`);
+                        }
+
+                        if(content!=""){
                             sql.query(`INSERT INTO pages_content (${page}) VALUES ('${content}')`);
                         }
 

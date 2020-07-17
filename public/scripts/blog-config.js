@@ -30,7 +30,9 @@ const get_response = () =>{
 
     res.forEach(index => {
         renderElem('a', index, 'actual-pages', index, null, null);
-        renderElem('input', `_${index}`, index, null, 'X', 'button');
+
+        renderElem('input', `_${index}`, 'actual-pages', null, 'X', 'button');
+
         send_menu.push(index)
     });
 
@@ -44,6 +46,7 @@ const delButton = (id) =>{
     send_menu.splice(send_menu.indexOf[id], 1);
     getID(id).remove();
     insert_into_send_menu();
+    getID(`_${id}`).remove();
 
 };
 
