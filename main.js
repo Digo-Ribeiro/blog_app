@@ -69,85 +69,25 @@ class server_structure {
             renderFile(`scripts/js/edit-page`, `public/scripts/edit-page.js`, app);
             renderFile(`scripts/js/index`, `public/scripts/index.js`, app);
 
-            let main_pages = [];
+            app.get(`/`, (req,res)=>{
 
-            let public_pages = [];
+                
 
-            app.get(`/`, (req, res)=>{
-
-                sql.query(`DESCRIBE pages_content`, (err, result)=>{
-
-                    if (err) throw err;
-
-                    public_pages = [];
-    
-                    for(let index = 2; index < result.length; index++){
-                        public_pages.push(result[index].Field);
-                    };
-
-                    res.render(`${__dirname}/public/index.html`, {menu: public_pages});
-                    
-                    
-                });
             });
 
-            sql.query(`DESCRIBE pages_content`, (err, result)=>{
+            app.post(`/savePost`, (req,res)=>{
 
-                if (err) throw err;
-
-                main_pages = [];
-
-                for(let index = 2; index < result.length; index++){
-                    main_pages.push(result[index].Field);
+                let send_to_db = {
+                    post_title: req.body.title,
+                    post_description: req.body.description,
+                    post_content: req.body.content,
+                    post_related: req.body.related
                 };
 
-                for(let index of main_pages){
-                    app.get(`/pages_${index}`, (req,res)=>{
-                        sql.query(`SELECT ${index} FROM pages_content`, (err, result)=>{
-                            let str = null;
-                            for(let i = 0; i < result.length; i++){
-                                if(result[i][index]!=''){
-                                    str = result[i][index];
-                                }
-                            }
-                            res.send(str);
-                        });
-                    });
-                }
-                
-            });
+                sql.query(`INSERT INTO blog_posts (post_title,post_description,post_content,related_to) VALUES ('${send_to_db.post_title}', '${send_to_db.post_description}','${send_to_db.post_content}','${send_to_db.post_related}')`, (err)=>{if (err) throw err});
 
-            app.post(`/savepagechanges`, (req,res)=>{
 
-                let page = req.body.page_name;
-                let content = req.body.content;
-
-                
-
-                let check_exists = sql.query(`SHOW COLUMNS FROM pages_content LIKE '${page}'`, (err, result)=>{
-                        if (err) throw err
-
-                        let getUndef = (result.length);
-
-                        print(getUndef)
-
-                        if(getUndef==1){
-                            sql.query(`ALTER TABLE pages_content DROP ${page}`);
-                            sql.query(`ALTER TABLE pages_content ADD ${page} VARCHAR(255) CHARACTER SET utf8 DEFAULT ''`);
-
-                        }else{
-                            sql.query(`ALTER TABLE pages_content ADD ${page} VARCHAR (255)`);
-                        }
-
-                        if(content!=""){
-                            sql.query(`INSERT INTO pages_content (${page}) VALUES ('${content}')`);
-                        }
-
-                    }
-                    
-                );
-
-                res.redirect(`/ePage:${page}`);
+                res.redirect(`/cPanel`);
 
             });
 

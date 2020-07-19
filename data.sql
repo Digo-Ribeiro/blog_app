@@ -5,6 +5,17 @@ CREATE TABLE navbar (
     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+CREATE TABLE blog_posts (
+    id int(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+
+    post_title varchar(255) NOT NULL,
+    post_description varchar(255),
+    post_content varchar(255),
+    
+    
+    reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
 CREATE TABLE pages_content (
     id int(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -25,3 +36,4 @@ IF NOT EXISTS ( SELECT NULL FROM pages_content WHERE column_name = "Home") THEN 
 INSERT INTO navbar (menu_items) VALUES ("Home");
 
 SET @item = "Home"; INSERT INTO navbar (menu_items) VALUES (@item) ON DUPLICATE KEY UPDATE menu_items = @item;
+

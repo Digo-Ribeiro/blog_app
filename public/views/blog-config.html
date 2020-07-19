@@ -18,25 +18,68 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 
+    <style>
+
+        #general-config{
+            font-weight: var(--font-weight-primary-bold);
+            letter-spacing: 0.9px;
+            -webkit-font-smoothing: antialiased;
+            --font-family-primary: "Noto Sans", sans-serif;
+        }
+
+        #actual-pages{
+            margin-top: 23px;
+            margin-bottom: 23px;
+            border: 4px dotted #333;
+            padding: 15px;
+        }
+        </style>
+
 </head>
 <body>
 
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" href="#">Disabled</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
     <form action="/setnewconfiguration" method="POST">
 
-        <div>
-            <h2>Menu da página</h2>
+        <div class="container">
 
-            <label>Inserir nova página</label> <input id="menu-text" type="text" /><input id="add-menu" type="button" value="add">
-            
-            <div id="actual-pages" >
+            <h1 id="general-config"> Configurações Gerais </h1>
 
-                
+            <div class="card">
+                <h5 class="card-header">Menu</h5>
+                <div class="card-body">
 
-            </div>
+                  <h5 class="card-title">Inserir e editar menus</h5>
 
-            <input name="menu" type="hidden" value="" id="send-menu" />
+                  <input id="menu-text" type="text" /><input id="add-menu" type="button" value="add">
 
-            <input type="submit" value="Salvar" />
+                  <div id="actual-pages" ></div>
+
+                  <input name="menu" type="hidden" value="" id="send-menu" />
+                  <input type="submit" class="btn btn-primary" value="Save" />
+                </div>
+              </div>
+
 
             </div>
 

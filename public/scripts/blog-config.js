@@ -12,13 +12,18 @@ const renderElem = (elemType, id, appendchild, str, vlu, _type) =>{
 
     if(elemType=='a'){
         elem.href = `/ePage:${id}`;
+        elem.className = 'card-text';
+    }else{
+        elem.className = 'btn btn-outline-danger';
+        elem.style = "border-radius: 0px;padding: 0px 4px;margin-left: 4px;margin-right: 5px;";
     }
-
-    getID(appendchild).appendChild(elem);
 
     if(_type=='button'){
         elem.addEventListener('click', ()=>{ delButton(elem.id) } ,false);
     }
+
+    getID(appendchild).appendChild(elem);
+
     
 };
 
@@ -65,8 +70,8 @@ const addItem = getID('add-menu').addEventListener(`click`,()=>{
         }
     }
 
-    renderElem('p', index, 'actual-pages', index, null, null);
-    renderElem('input', `_${index}`, index, null, 'X', 'button');
+    renderElem('a', index, 'actual-pages', index, null, null);
+    renderElem('input', `_${index}`, 'actual-pages', null, 'X', 'button');
     send_menu.push(index);
     insert_into_send_menu();
 
