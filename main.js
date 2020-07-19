@@ -68,10 +68,33 @@ class server_structure {
             renderFile(`scripts/js/stdlib`, `public/scripts/stdlib.js`, app);
             renderFile(`scripts/js/edit-page`, `public/scripts/edit-page.js`, app);
             renderFile(`scripts/js/index`, `public/scripts/index.js`, app);
+            renderFile(`scripts/js/page-post-select`, `public/scripts/page-post-select.js`, app);
+
+            app.get(`/pages_:page`, (req,res)=>{
+
+                sql.query(`SELECT reg_date, post_title,post_description FROM blog_posts WHERE related_to="${req.params.page}";`, (err, rows)=>{
+                    if (err) throw err
+
+                    for(let index of rows){
+                        print(index)
+                    };
+                    
+
+                });
+
+            });
 
             app.get(`/`, (req,res)=>{
 
-                
+                let get_menu = [];
+
+                sql.query(`SELECT menu_items FROM navbar`, (err, rows)=>{
+                    for(let index of rows){
+                        get_menu.push(index.menu_items);
+                    }
+
+                    res.render(`${__dirname}/public/index.html`, { navbar: get_menu });
+                });
 
             });
 
