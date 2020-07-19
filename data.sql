@@ -37,3 +37,4 @@ INSERT INTO navbar (menu_items) VALUES ("Home");
 
 SET @item = "Home"; INSERT INTO navbar (menu_items) VALUES (@item) ON DUPLICATE KEY UPDATE menu_items = @item;
 
+SELECT post_content FROM blog_posts WHERE (related_to = 'Downloads' AND post_title = 'Teste')
