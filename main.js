@@ -41,19 +41,6 @@ class server_structure {
 
     constructor(){
         this.server = new server;
-        this.frontEndFilesPath = (type)=>{
-            let types = {
-                _js: (type==`js`) ? true : false,
-                _css: (type==`css`) ? true : false
-            };
-
-            if(types._js){
-                return `/scripts/js/`;
-            }else{
-                return `/scripts/css/`
-            }
-
-        };
     }
 
     _render(){
