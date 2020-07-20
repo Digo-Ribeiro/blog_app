@@ -20,6 +20,10 @@
 
     <style>
 
+        input:focus{
+            outline: none;
+        }
+
         #general-config{
             font-weight: var(--font-weight-primary-bold);
             letter-spacing: 0.9px;
@@ -59,33 +63,62 @@
         </div>
       </nav>
 
-    <form action="/setnewconfiguration" method="POST">
+      <div class="container">
 
-        <div class="container">
+        <br />
+        <h1 id="general-config"> Configurações Gerais </h1>
 
-            <h1 id="general-config"> Configurações Gerais </h1>
+        <div class="card">
+          <div class="card-header">
+            Featured
+          </div>
 
-            <div class="card">
-                <h5 class="card-header">Menu</h5>
-                <div class="card-body">
+          <div class="card-body">
 
-                  <h5 class="card-title">Inserir e editar menus</h5>
-
-                  <input id="menu-text" type="text" /><input id="add-menu" type="button" value="add">
-
-                  <div id="actual-pages" ></div>
-
-                  <input name="menu" type="hidden" value="" id="send-menu" />
-                  <input type="submit" class="btn btn-primary" value="Save" />
-                </div>
+            <div class="input-group mb-3">
+              <input id="page-name" type="text" class="form-control" placeholder="Adicionar nova página" aria-label="Recipient's username" aria-describedby="basic-addon2">
+              <div class="input-group-append">
+                <button onclick="addnewpage(getID('page-name').value)" class="btn btn-outline-secondary" type="button">+</button>
               </div>
-
-
             </div>
 
-        </form>
+            <span id="alert_message">  </span>
 
-        <div id="from-server" style="opacity: 0;"> <%= pages %> </div>
+            <form action="/setnewconfiguration" method="POST">
+
+              <div class="row" id="navbar_container">
+  
+                  <% pages.forEach((index)=>{ %>
+  
+                    <div class="col-sm-6" style="margin-top: 25px;" id="-container-<%= index %>">
+                      <div class="card">
+                        <div class="card-body">
+                          <input autocomplete="false" style="border: 0px;" type="text" id="<%= index %>" onkeyup="_save(this.id)" class="card-title" value="<%= index %>">
+                          <a href="/ePage:<%= index %>" class="btn btn-primary">Edit Page</a>
+                          <button type="button" onclick="_save_string('<%= index %>')" class="btn btn-outline-success">Confirm Changes</button>
+                          <button type="button" onclick="_delete_navbar_item('<%= index %>')" class="btn btn-outline-danger">X</button>
+                        </div>
+                      </div>
+                    </div>
+  
+                  <% }) %>
+                
+                
+              </div>
+  
+              <br />
+
+              <input name="new_navbar_items" type="hidden" id="from-server" value="<%= pages %>">
+              <input type="hidden" name="old_navbar_items" id="old_navbar" value="">
+              
+              <input type="submit" class="btn btn-primary" value="Save" />
+  
+          </form>
+
+          </div>
+        </div>
+
+      </div>
 
         <script src="/scripts/js/stdlib"></script>
         <script src="/scripts/js/blog-config"></script>
