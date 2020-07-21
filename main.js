@@ -160,11 +160,12 @@ class server_structure {
 
             app.post(`/setnewconfiguration`, (req,res)=>{
 
-                let old_navbar_items = req.body.old_navbar_items;
-                old_navbar_items = old_navbar_items.split(',');
+                let navbar_items = req.body.navbar_items;
+                navbar_items = navbar_items.split(',');
 
-                old_navbar_items.shift();
+                print(navbar_items);
 
+                /*
                 sql.query(`DELETE FROM navbar`,(err)=>{
                     if (err) throw err
                 });
@@ -180,6 +181,7 @@ class server_structure {
                     });
   
                 });
+                */
 
 
                 res.redirect('/cPanel');

@@ -90,19 +90,19 @@
 
               <div class="row" id="navbar_container">
   
-                  <% pages.forEach((index)=>{ %>
+                  <% pages.forEach((index, counter)=>{ %>
   
                     <div class="col-sm-6" style="margin-top: 25px;" id="-container-<%= index %>">
                       <div class="card">
                         <div class="card-body">
-                          <input autocomplete="false" style="border: 0px;" type="text" id="<%= index %>" onkeyup="_save(this.id)" class="card-title" value="<%= index %>">
+                          <span id="-><%= counter %>"><input autocomplete="false" style="border: 0px;" type="text" id="<%= index %>" class="card-title" value="<%= index %>">
                           <a href="/ePage:<%= index %>" class="btn btn-primary">Edit Page</a>
-                          <button type="button" onclick="_save_string('<%= index %>')" class="btn btn-outline-success">Confirm Changes</button>
-                          <button type="button" onclick="_delete_navbar_item('<%= index %>')" class="btn btn-outline-danger">X</button>
+                          <button type="button" class="btn btn-outline-danger">X</button>
+                        <!-- onclick="_save_string('<%= index %>')"; onclick="_delete_navbar_item('<%= index %>')"-->
                         </div>
                       </div>
                     </div>
-  
+
                   <% }) %>
                 
                 
@@ -110,10 +110,10 @@
   
               <br />
 
-              <input name="new_navbar_items" type="hidden" id="from-server" value="<%= pages %>">
-              <input type="hidden" name="old_navbar_items" id="old_navbar" value="">
+              <input type="hidden" id="items_length" value="<%= pages.length; %>">
+              <input type="hidden" name="navbar_items" id="navbar" value="">
               
-              <input type="submit" class="btn btn-primary" value="Save" />
+              <input type="button" onclick="_perform_submit()" class="btn btn-primary" value="Save" />
   
           </form>
 
