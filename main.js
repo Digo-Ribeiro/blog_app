@@ -165,29 +165,25 @@ class server_structure {
 
                 old_navbar_items.shift();
 
-                old_navbar_items.forEach((item)=>{
-
-                    let _separar = item.split(':');
-                    print(_separar);
-
-                });
-
-
-                /*
-                
                 sql.query(`DELETE FROM navbar`,(err)=>{
                     if (err) throw err
                 });
-                
-                for(let index of menu_items){
-                    sql.query(`INSERT INTO navbar (menu_items) VALUES ("${index}")`, (err)=>{
+
+                old_navbar_items.forEach((item)=>{
+
+                    let _separar = item.split(':');
+                    
+                    sql.query(`UPDATE blog_posts SET related_to = '${_separar[1]}' WHERE related_to ='${_separar[0]}'`, (err)=>{ if (err) throw err; });
+
+                    sql.query(`INSERT INTO navbar (menu_items) VALUES ("${_separar[1]}")`, (err)=>{
                         if (err) throw err
                     });
-                };
+  
+                });
+
 
                 res.redirect('/cPanel');
 
-                */
             });
 
         });
