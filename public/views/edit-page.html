@@ -45,6 +45,26 @@
     
 
       <div class="container">
+
+        <br />
+        <br />
+
+
+        <div class="row">
+          <% package._title.forEach(function(item, index){ %>
+            <div class="col-sm-6" style="margin-top: 10px;">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title"> <%= item %>  </h5>
+                  <h6 class="card-subtitle mb-2 text-muted"><%= package._date[index] %></h6>
+                  <a href="/pages_content:<%= page_name %>&:<%= item %>" class="card-link">Editar</a>
+                </div>
+              </div>
+          </div>
+          <% }); %>
+        </div>
+
+
         <br />
         <br />
         <form action="/savePost" method="POST">
@@ -66,10 +86,27 @@
         </form>
       </div>
 
-    <div id="from-server" style="opacity: 0;"> <%= page %> </div>
+    <div id="from-server" style="opacity: 0;"> <%= page_name %> </div>
+
+    <br />
+    <br />
+
+    <!-- Footer -->
+    <footer class="page-footer font-small blue">
+
+      <!-- Copyright -->
+      <div class="footer-copyright text-center py-3">© 2020 Copyright:
+        <a href="https://github.com/Digo-Ribeiro" target="_blank"> @Digo-Ribeiro</a><br/>
+        <a href="#"> Back to Top</a>
+      </div>
+      <!-- Copyright -->
+
+    </footer>
+    <!-- Footer -->
 
     <script src="/scripts/js/stdlib"></script>
     <script src='scripts/js/edit-page'></script>
-    
+
 </body>
+
 </html>

@@ -135,7 +135,28 @@ class server_structure {
 
                 let getPage = req.params.id;
                 getPage= getPage.replace(':', '');
-                res.render(`${__dirname}/public/views/edit-page.html`, { page: getPage });
+
+                sql.query(`SELECT reg_date, post_title FROM blog_posts WHERE related_to="${getPage}";`, (err, rows)=>{
+                    if (err) throw err
+
+                    let _pack = {
+                        _date: [],
+                        _title: []
+                    }
+
+                    for(let index of rows){
+                        _pack._date.push(index.reg_date)
+                        _pack._title.push(index.post_title);
+                    };
+                    
+                    res.render(`${__dirname}/public/views/edit-page.html`,{
+                        package: _pack,
+                        page_name: getPage
+                    });
+
+                });
+
+                //res.render(`${__dirname}/public/views/edit-page.html`, { page: getPage });
 
             });
 
@@ -160,29 +181,68 @@ class server_structure {
 
             app.post(`/setnewconfiguration`, (req,res)=>{
 
+                let kill_operation = false;
                 let navbar_items = req.body.navbar_items;
                 navbar_items = navbar_items.split(',');
 
-                print(navbar_items);
+                let get_deleted_items = req.body.deleted_items;
+                get_deleted_items = get_deleted_items.split(',');
 
-                /*
-                sql.query(`DELETE FROM navbar`,(err)=>{
-                    if (err) throw err
+               get_deleted_items.forEach((index)=>{
+                sql.query(`DELETE FROM navbar WHERE menu_items = '${index}'`, (err)=>{ if(err) throw err });
+                sql.query(`DELETE FROM blog_posts WHERE related_to = '${index}'`, (err)=>{ if(err) throw err });
+               }); 
+
+
+                navbar_items.forEach((index)=>{
+
+                    let separator_counter = 0;
+                    let getString = index.length;
+
+                    for(let i = 0; i < getString; i++){
+                        if(index[i]==':'){ separator_counter++ };
+                    }
+
+                    if(separator_counter>1){
+                        print('[  ALERT  ] SQL injection detected! Operation blocked!');
+                        kill_operation=true;
+                    }
+
                 });
 
-                old_navbar_items.forEach((item)=>{
+                sql.query('SELECT menu_items FROM navbar', (err,rows)=>{
 
-                    let _separar = item.split(':');
-                    
-                    sql.query(`UPDATE blog_posts SET related_to = '${_separar[1]}' WHERE related_to ='${_separar[0]}'`, (err)=>{ if (err) throw err; });
+                    let saved_page = [];
 
-                    sql.query(`INSERT INTO navbar (menu_items) VALUES ("${_separar[1]}")`, (err)=>{
-                        if (err) throw err
-                    });
-  
+                    for(let index = 0; index < rows.length; index++){
+                        saved_page.push(rows[index].menu_items);
+                    }
+
+                    (!kill_operation) ? navbar_items.forEach((index)=>{
+
+                        index = index.split(':');
+                        //index_array: 0 = original; 1 = editado;
+
+                        let já_existe = false;
+
+                        saved_page.forEach((i)=>{
+                            (index[0]==i) ? já_existe = true : false;
+                        });
+
+                        (!já_existe) ? sql.query(`INSERT INTO navbar (menu_items) VALUES ('${index[1]}')`,(err)=>{ if(err) throw err }) : false;
+
+                        já_existe = false;
+
+                        if(index[0]!=index[1]){
+                            
+                            sql.query(`UPDATE navbar SET menu_items = '${index[1]}' WHERE menu_items = '${index[0]}'`, (err)=>{ if(err) throw err });
+                            sql.query(`UPDATE blog_posts SET related_to = '${index[1]}' WHERE related_to = '${index[0]}'`, (err)=>{ if(err) throw err });
+                            
+                        }
+
+                    }) : false;
+
                 });
-                */
-
 
                 res.redirect('/cPanel');
 

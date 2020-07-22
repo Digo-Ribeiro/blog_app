@@ -2,12 +2,28 @@
 
 let str_to_add = null;
 
-const _delete_navbar_item = (id) =>{
+const _delete_navbar_item = (id, id_remove) =>{
+
     let _confirm = confirm('Tem certeza que deseja deletar uma página completa? Suas postagens serão perdidas...');
     if(_confirm){
-        getID(`-container-${id}`).remove();
-        alert_message('[  OK  ] ', `A página "${id}" foi apagada! Ainda é possível recuperar sua página, aperte F5 para retroceder está ação, clique em Save para deletar definitivamente.`,'danger');
+      _items_index.splice(_items_index.indexOf(id), 1);
+        alert_message('[  OK  ] ', `A página "${getID(id).childNodes[0].value}" foi apagada! Ainda é possível recuperar sua página, aperte F5 para retroceder está ação, clique em Save para deletar definitivamente.`,'danger');
+
+        let deleted_items = [];
+
+        if(getID('deleted_items').value.length!=0){
+          deleted_items = getID('deleted_items').value;
+          deleted_items = deleted_items.split(',');
+        }
+
+        deleted_items.push(getID(id).childNodes[0].value);
+        getID('deleted_items').value = deleted_items;
+
+        getID(id_remove).remove();
+
+
     }
+    
 };
 
 const alert_message = (alertTitle, alertMessage, alertType) =>{
@@ -32,7 +48,7 @@ const addnewpage = (id) =>{
   let index_value = getID('items_length').value;
   index_value = parseInt(index_value);
 
-    let _str = `<div class="col-sm-6" style="margin-top: 25px;" id="-container-${id}">
+    let _str = `<div class="col-sm-6" style="margin-top: 25px;max-width: 210px!important;margin-left: 7px;" id="-container-${id}">
     <div class="card">
       <div class="card-body">
         <span id="->${index_value}"><input autocomplete="false" style="border: 0px;" type="text" id="${id}" class="card-title" value="${id}">
@@ -43,8 +59,11 @@ const addnewpage = (id) =>{
   </div>`;
 
   getID('navbar_container').insertAdjacentHTML('afterbegin',_str);
+
+  _items_index.push(`->${index_value}`);
   index_value++;
   getID('items_length').value = index_value;
+  
 
   alert_message('[ OK ]', `Adicionado "${id}" ao menu`, 'success');
   
@@ -52,16 +71,13 @@ const addnewpage = (id) =>{
 
 const _perform_submit = () =>{
 
-  let navbar_index = getID('items_length').value;
+
   let navbar_items = [];
 
-  for(let index = 0; index < navbar_index; index++){
+  _items_index.forEach(index => {
+      navbar_items.push(`${getID(index).childNodes[0].id}:${getID(index).childNodes[0].value}`);
+  });
 
-    let perform_id = `->${index}`;
-    
-    navbar_items.push(`${getID(perform_id).childNodes[0].id}:${getID(perform_id).childNodes[0].value}`);
-
-    getID('navbar').value = navbar_items;
-  };
+  getID('navbar').value = navbar_items;
 
 };

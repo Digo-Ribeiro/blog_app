@@ -37,6 +37,7 @@
             border: 4px dotted #333;
             padding: 15px;
         }
+
         </style>
 
 </head>
@@ -90,14 +91,20 @@
 
               <div class="row" id="navbar_container">
   
+                <script type="text/javascript"> let _items_index = []; </script>
+
                   <% pages.forEach((index, counter)=>{ %>
   
-                    <div class="col-sm-6" style="margin-top: 25px;" id="-container-<%= index %>">
+                    <script type="text/javascript">
+                      _items_index.push(`-><%= counter %>`);
+                    </script>
+
+                    <div class="col-sm-6" style="margin-top: 25px;max-width: 210px!important;margin-left: 7px;" id="-container-<%= index %>">
                       <div class="card">
                         <div class="card-body">
                           <span id="-><%= counter %>"><input autocomplete="false" style="border: 0px;" type="text" id="<%= index %>" class="card-title" value="<%= index %>">
                           <a href="/ePage:<%= index %>" class="btn btn-primary">Edit Page</a>
-                          <button type="button" class="btn btn-outline-danger">X</button>
+                          <button type="button" onClick="_delete_navbar_item('-><%= counter %>', '-container-<%= index %>')" class="btn btn-outline-danger">X</button>
                         <!-- onclick="_save_string('<%= index %>')"; onclick="_delete_navbar_item('<%= index %>')"-->
                         </div>
                       </div>
@@ -112,8 +119,9 @@
 
               <input type="hidden" id="items_length" value="<%= pages.length; %>">
               <input type="hidden" name="navbar_items" id="navbar" value="">
+              <input type="hidden" name="deleted_items" id="deleted_items" value="" />
               
-              <input type="button" onclick="_perform_submit()" class="btn btn-primary" value="Save" />
+              <input type="submit" onclick="_perform_submit()" class="btn btn-primary" value="Save" />
   
           </form>
 
@@ -121,6 +129,22 @@
         </div>
 
       </div>
+
+      <br />
+      <br />
+
+      <!-- Footer -->
+    <footer class="page-footer font-small blue">
+
+      <!-- Copyright -->
+      <div class="footer-copyright text-center py-3">© 2020 Copyright:
+        <a href="https://github.com/Digo-Ribeiro" target="_blank"> @Digo-Ribeiro</a><br/>
+        <a href="#"> Back to Top</a>
+      </div>
+      <!-- Copyright -->
+
+    </footer>
+    <!-- Footer -->
 
         <script src="/scripts/js/stdlib"></script>
         <script src="/scripts/js/blog-config"></script>
