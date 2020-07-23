@@ -21,6 +21,9 @@ class server {
         this.ejs = net.ejs;
         this.port = net.port
 
+        this.http = require('http').createServer(this.app);
+        this.io = require('socket.io')(this.http);
+
     }
 
     _start(){
@@ -32,7 +35,7 @@ class server {
     }
 
     _listen(){
-        this.app.listen(this.port, ()=>{ print(`[  OK  ] Server Started at port ${this.port}`) });
+        this.http.listen(this.port, ()=>{ print(`[  OK  ] Server Started at port ${this.port}`) });
     }
 
 };
