@@ -29,6 +29,7 @@
        <!-- Latest compiled JavaScript -->
        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 
+       <script src="/socket.io/socket.io.js"></script>
 
 </head>
 <body>
@@ -61,34 +62,37 @@
         <br />
 
 
-        <form action="/ePage:<%= page_name %>" method="POST">
+
           <div class="row">
             <% package._title.forEach(function(item, index){ %>
               <div class="col-sm-6" style="margin-top: 10px;">
                 <div class="card">
                   <div class="card-body">
-                    <h5 name="page_edit" class="card-title"> <%= item %>  </h5>
+                    <h5 class="card-title"> <%= item %>  </h5>
+                    <br>
                     <h6 class="card-subtitle mb-2 text-muted"><%= package._date[index] %></h6>
-                    <input type="submit" value="Editar" class="card-link">
-                    <a href="/pages_content:<%= page_name %>&:<%= item %>" class="card-link">Pré-Visualizar</a>
+                    <br>
+                    <a onclick="_send_to_delete(this.id)" id="<%= item %>" class="card-link"> Editar </a>
+                    <a onclick="delete_post(this.id)" id="<%= item %>" class="card-link" style="color: red;">Excluir</a>
+                    <a href="/pages_content:<%= page_name %>&:<%= item %>" target="_blank" class="card-link">Visualizar</a>
                   </div>
                 </div>
             </div>
             <% }); %>
           </div>
-        </form>
+
 
 
         <br />
         <br />
 
         <div class="card">
-          <div class="card-header">
+          <div class="card-header" id="reader">
             Criar/Editar Suas Postagens
           </div>
           <div class="card-body">
 
-              <form action="/savePost" method="POST">
+              
                 <div class="form-group">
                   <label for="exampleFormControlInput1">Título</label>
                   <input name="title" type="text" class="form-control" id="post_title" placeholder="Título da postagem">
@@ -109,10 +113,9 @@
                 <div class="form-group">
                   <textarea name="content" class="form-control" id="post_content" rows="3"></textarea>
                 </div>
-      
-                <input name="related" id="to_server" type="hidden" value="">
-                <button type="submit" class="btn btn-primary mb-2">Salvar e publicar</button>
-              </form>
+
+                <button onclick="save_publish()" class="btn btn-primary mb-2">Salvar e publicar</button>
+              
             </div>
               
           </div>

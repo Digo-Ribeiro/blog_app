@@ -31,7 +31,7 @@ class server {
         this.app.engine('html', this.ejs.renderFile);
         this.app.set('view engine', 'html');
         this.app.use(this.express.urlencoded());
-        return this.app;
+        return [this.app, this.io];
     }
 
     _listen(){
@@ -47,7 +47,10 @@ class server_structure {
     }
 
     _render(){
-        const app = this.server._start();
+        const get_net = this.server._start();
+
+        const app = get_net[0];
+        const io = get_net[1];
 
         sql.connect((err)=>{
 
@@ -251,9 +254,75 @@ class server_structure {
 
             });
 
+            io.sockets.on('connection', (socket)=>{
+
+                socket.on('delete_post', (id)=>{
+
+                    id = id.split(':');
+
+                    sql.query(`SELECT id FROM blog_posts WHERE (post_title='${id[1]}' AND related_to='${id[0]}')`, (err,rows)=>{
+                        if(err) throw err
+                        sql.query(`DELETE FROM blog_posts WHERE id='${rows[0].id}'`);
+                        socket.emit('deleted_info', 'Post Apagado!');
+                    });
+
+                });
+
+                socket.on('post', (id)=>{
+                    
+                    id = id.split(':');
+
+                    sql.query(`SELECT post_title, post_description, post_content FROM blog_posts WHERE (post_title='${id[1]}' AND related_to = '${id[0]}')`, (err, rows)=>{
+                        if(err) throw err
+
+                        let _pack = {
+                            _title: rows[0].post_title,
+                            _description: rows[0].post_description,
+                            _content: rows[0].post_content
+                        }
+
+                        socket.emit('package', _pack);
+
+                    });
+
+                });
+
+                socket.on('save_publish', (_pack)=>{
+
+                    sql.query(` SELECT id FROM blog_posts WHERE post_title = '${_pack._title}' `,(err, rows)=>{ 
+                        if(err) throw err
+
+                        if(rows.length!=0){
+   
+                            sql.query(` SELECT * FROM blog_posts WHERE id = '${rows[0].id}' `, (err, rows)=>{
+                                if(err) throw err
+
+                                sql.query(` DELETE FROM blog_posts WHERE id = '${rows[0].id}' `, (err)=>{if(err)throw err});
+
+                                sql.query(`INSERT INTO blog_posts (post_title, post_description, post_content, related_to) VALUES ('${_pack._title}', '${_pack._description}', '${_pack._content}', '${_pack._page}')`, (err)=>{ if(err) throw err});
+
+                                socket.emit('save_reload', 'Post salvo e publicado!');
+                            });
+
+                        }else{
+
+                            sql.query(`INSERT INTO blog_posts (post_title, post_description,post_content,related_to) VALUES ('${_pack._title}', '${_pack._description}', '${_pack._content}', '${_pack._page}')`);
+                            socket.emit('save_reload', 'Post salvo e publicado!');
+
+                        };
+
+
+                        
+                        
+                    });
+
+                });
+
+
+            });
+
         });
 
-    
 
         this.server._listen();
     }
