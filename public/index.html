@@ -18,6 +18,22 @@
           <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
    
+    <style>
+
+      *{
+        -webkit-font-smoothing: antialiased;
+        font-family: "Noto Sans", sans-serif;
+      }
+
+      #nav-items{
+        color: #161b3d;
+        text-decoration: none;
+        letter-spacing: 0.9px;
+        font-weight: 700!important;
+        text-transform: uppercase;
+      }
+
+    </style>
    
 </head>
 <body>
@@ -36,9 +52,9 @@
     </ul>-->
 
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: white!important;">
 
-      <nav class="navbar navbar-light bg-light">
+      <nav class="navbar navbar-light bg-light" style="background-color: white!important;">
         <a class="navbar-brand" href="#">
           <img src="/docs/4.0/assets/brand/bootstrap-solid.svg" width="30" height="30" class="d-inline-block align-top" alt="">
           TechNeaded
@@ -57,7 +73,7 @@
 
         
                     <li class="nav-item">
-                        <a class="nav-link" href="pages_<%= item %>"><%= item %></a>
+                        <a class="nav-link" href="pages_<%= item %>" id="nav-items"><%= item %></a>
                     </li>
                   
         
@@ -70,7 +86,7 @@
 
 
           <!-- Footer -->
-    <footer class="page-footer font-small blue">
+    <footer class="page-footer font-small blue fixed-bottom">
 
         <!-- Copyright -->
         <div class="footer-copyright text-center py-3">© 2020 Copyright:
