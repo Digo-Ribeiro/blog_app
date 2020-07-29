@@ -17,6 +17,9 @@ const ejs = require('ejs');
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const { sql } = require('./sql-conn.js');
+const formidable = require('formidable');
+const fs = require('fs');
+const path = require('path');
 
 // -> (GLOBAL VARIABLES) END
 
@@ -26,6 +29,7 @@ const start_server = () =>{
     app.engine('html', ejs.renderFile);
     app.set('view engine', 'html');
     app.use(express.urlencoded());
+    app.use('/images', express.static(`${__dirname}/public/images`))
 
     routes();
 
@@ -46,7 +50,25 @@ const routes = () =>{
     renderFile(`scripts/js/edit-page`, `${__dirname}/public/scripts/JS/edit-page.js`);
     renderFile(`scripts/js/index`, `${__dirname}/public/scripts/JS/index.js`);
     renderFile(`scripts/js/page-post-select`, `${__dirname}/public/scripts/JS/page-post-select.js`);
-    
+
+    app.post('/upload', (req,res)=>{
+
+        var form = new formidable.IncomingForm();
+
+        form.parse(req, function (err, fields, files) {
+
+            var oldpath = files.file.path;
+            var newpath = `${__dirname}/public/images/${files.file.name}`;
+
+            fs.rename(oldpath, newpath, function (err) {
+                if (err) throw err;
+                res.write('File uploaded and moved!');
+                res.end();
+            });
+
+        });
+
+    });
 
     app.get(`/`, (req,res)=>{
 

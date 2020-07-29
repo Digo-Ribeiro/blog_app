@@ -9,7 +9,7 @@ const _main = () =>{
 socket.on('package', (pack)=>{
     getID('post_title').value = pack._title;
     getID('post_description').value = pack._description;
-    getID('post_content').value = pack._content;
+    getID('content').innerHTML = pack._content;
     getID('reader').scrollIntoView();
 });
 
@@ -46,12 +46,68 @@ const save_publish = () =>{
     let send_pack = {
         _title: getID('post_title').value,
         _description: getID('post_description').value,
-        _content: getID('post_content').value,
+        _content: getID('content').innerHTML,
         _page: page_name
     }
 
     socket.emit('save_publish', send_pack);
 
 };
+
+
+
+getID('file').onchange = function (evt) {
+
+    let tgt = evt.target || window.event.srcElement, files = tgt.files;
+
+    if (FileReader && files && files.length) {
+
+        var fr = new FileReader();
+
+        fr.onload = () => {
+            let elem = document.createElement('img');
+            elem.src = fr.result;
+            elem.width = 500;
+            elem.id = "user-image";
+            elem.className = "ui-resizable";
+            getID('content').appendChild(elem);
+        }
+
+        fr.readAsDataURL(files[0]);
+
+    }
+
+
+}
+
+getID('add_shell').addEventListener('click',(event)=>{
+    
+    let elemss = document.createElement('div');
+    elemss.innerHTML = '<br />';
+    getID('content').appendChild(elemss);
+    let elem = document.createElement('div');
+    elem.id = 'shell_command';
+    elem.innerHTML = '<span style="color: #98c379;"> user:~/$ </span> command';
+    getID('content').appendChild(elem);
+    let elems = document.createElement('div');
+    elems.innerHTML = '<br />';
+    getID('content').appendChild(elems);
+   
+    
+
+},false);
+
+getID('add_space').addEventListener('click',(event)=>{
+    
+    let elem = document.createElement('div');
+    elem.innerHTML = '<br />';
+    getID('content').appendChild(elem);
+
+    
+
+},false);
+
+
+
 
 _main();
